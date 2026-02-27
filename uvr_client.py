@@ -134,7 +134,7 @@ class TA_UVR_CAN:
             start_time = time.monotonic()
             while (time.monotonic() - start_time) < timeout:
                 res = self.bus.recv(timeout=0.1)
-                if res and res.is_rx and res.dlc == 8:
+                if res and res.dlc == 8:
                     return res
 
         except can.CanError as e:
