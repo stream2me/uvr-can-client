@@ -36,7 +36,7 @@ with TA_UVR_CAN(remote_node=1, local_node=16, channel='can0') as uvr:
 
     # get device details
     data = uvr.read_category("uvr")
-    print(f"Connected to: {data['output']['name']} (HW: {data['output']['hw']})")
+    print(f"Connected to: {data['uvr']['name']} (HW: {data['uvr']['hw']})")
 
 ```
 <sup>see examples for more<sup/>
