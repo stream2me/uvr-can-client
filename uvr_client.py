@@ -1,6 +1,7 @@
 import can
 import struct
 import time
+import datetime
 import logging
 from typing import Dict, Any, Optional
 
@@ -419,7 +420,7 @@ class TA_UVR_CAN:
         return "Generic CANopen Node"
 
     def read_time(self):
-        '''Returns the local time and date from the UVR1611.'''
+        '''Returns the local time and date from the UVR1611 in ISO format.'''
         try:
             mm = self.sdo_upload_seg_wrapper(0x2011, 0x01)
             hh = self.sdo_upload_seg_wrapper(0x2012, 0x01)
@@ -428,7 +429,14 @@ class TA_UVR_CAN:
             y = self.sdo_upload_seg_wrapper(0x2016, 0x01)
 
             if all(val is not None and len(val) > 0 for val in [d, m, y, hh, mm]):
-                return f"{hh[0]:02d}:{mm[0]:02d} {d[0]:02d}-{m[0]:02d}-{2000 + y[0]}"
+                dt = datetime.datetime(
+                    year=2000 + y[0],
+                    month=m[0],
+                    day=d[0],
+                    hour=hh[0],
+                    minute=mm[0]
+                )
+                return dt.isoformat()
         except Exception as err:
             log.debug(f"Error retrieving the time -> {err}")
             return None
