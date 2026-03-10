@@ -553,6 +553,8 @@ class TA_UVR_CAN:
 
         if include_fields is None or include_fields == "all":
             include_fields = list(conf["fields"].keys())
+            if category == "uvr":
+               include_fields += [ "time", "node" ]
 
         s = 0 if conf["count"] == 0 else 1
 
@@ -580,12 +582,15 @@ class TA_UVR_CAN:
                             entry.update(val)
                         else:
                             entry[field] = val
-            if entry and category == "uvr":
-                entry.update({
-                    "node": self.remote_node,
-                    "time": self.read_time()
-                })
-                results[category] = entry
-                continue
+
+                    if category == "uvr":
+                        if field == "node":
+                            entry.update({ "node": self.remote_node })
+                        if field == "time":
+                            entry.update({ "time": self.read_time() })
+
+                if entry and category == "uvr":
+                    results[category] = entry
+                    continue
             if entry: results[category][subindex] = entry
         return results
